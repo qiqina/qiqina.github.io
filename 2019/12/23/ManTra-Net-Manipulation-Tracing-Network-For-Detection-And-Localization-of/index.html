@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="论文题目 具有异常功能的图像伪造的检测和定位的操纵跟踪网络年份 2019出处 CVPR作者 Yue Wu, Wael AbdAlmageed, Premkumar Natarajan">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ManTra-Net: Manipulation Tracing Network For Detection And Localization of Image Forgeries With Anomalous Features">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;23&#x2F;ManTra-Net-Manipulation-Tracing-Network-For-Detection-And-Localization-of&#x2F;index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="论文题目 具有异常功能的图像伪造的检测和定位的操纵跟踪网络年份 2019出处 CVPR作者 Yue Wu, Wael AbdAlmageed, Premkumar Natarajan">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191223165400.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191223165705.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191223165855.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191223165943.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191223170029.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191223170113.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191223190728.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191223190936.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191223191003.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191223170530.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191223170622.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191223171057.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191223171228.png">
+<meta property="article:published_time" content="2019-12-23T08:47:39.000Z">
+<meta property="article:modified_time" content="2019-12-23T11:14:12.428Z">
+<meta property="article:author" content="Qi na">
+<meta property="article:tag" content="篡改检测">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191223165400.png">
+
+<link rel="canonical" href="http://yoursite.com/2019/12/23/ManTra-Net-Manipulation-Tracing-Network-For-Detection-And-Localization-of/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>ManTra-Net: Manipulation Tracing Network For Detection And Localization of Image Forgeries With Anomalous Features | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/23/ManTra-Net-Manipulation-Tracing-Network-For-Detection-And-Localization-of/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
+      <meta itemprop="name" content="Qi na">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ManTra-Net: Manipulation Tracing Network For Detection And Localization of Image Forgeries With Anomalous Features
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-12-23 16:47:39 / 修改时间：19:14:12" itemprop="dateCreated datePublished" datetime="2019-12-23T16:47:39+08:00">2019-12-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>论文题目</strong> 具有异常功能的图像伪造的检测和定位的操纵跟踪网络<br><strong>年份</strong> 2019<br><strong>出处</strong> CVPR<br><strong>作者</strong> Yue Wu, Wael AbdAlmageed, Premkumar Natarajan  </p>
+<a id="more"></a>   
+<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>&nbsp;&nbsp;现实生活中，许多篡改图像使用多种组合篡改手段，而且一些篡改检测方法依赖于费时的预/后处理。基于此，作者为篡改图像的检测和定位提出一个统一的篡改检测网络——Man-tra net，不需要对数据预处理和后处理，可以处理任意尺寸图像。实验表明，ManTra-Net对微小操作敏感，对伪装篡改操作后处理有鲁棒性，对于未知数据和篡改类型，有良好的泛化能力。<br>&nbsp;&nbsp;本文三个突出贡献：</p>
+<ol>
+<li>设计了一个简单有效的自监督学习任务，可以分类385种图像篡改类型。</li>
+<li>将图像篡改定位问题当作局部异常检测问题。设计Z-分数特征来表示局部异常，并提出一个新的LSTM方法检测局部异常。</li>
+<li>精心设计消融实验来优化Man-tra net网络。  <h1 id="1-操作追踪网络"><a href="#1-操作追踪网络" class="headerlink" title="1 操作追踪网络"></a>1 操作追踪网络</h1><h2 id="1-1-网络结构概述"><a href="#1-1-网络结构概述" class="headerlink" title="1.1 网络结构概述"></a>1.1 网络结构概述</h2>&nbsp;&nbsp;Man-tra net 由两个子网络组成：1. 图像操作痕迹特征提取器，用于创建统一的特征表述。2. 局部异常检测网络（LADN），无需后处理便可以直接定位篡改区域。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191223165400.png" alt=""><br>论文的三大贡献是：</li>
+<li>改造图像操作痕迹特征，这个特征曾经仅限于区分少量已知操作，现在可以区分385种已知类型的操作。</li>
+<li>放弃常规语义分割的方式，而把IFLD任务看作局部异常检测问题来提高模型泛化能力。提出一个简单有效的LADN结构，模仿人类决策过程：1. 在ZPOOL2D DNN层，用Z-分数标准化局部特征和参考特征的差异。2. 对从不同分辨率汇集的ZPool2D特征图执行Conv2DLSTM顺序分析，以实现由远及近的分析。</li>
+<li>精心设计消融实验优化IMC和LADN结构。  <h2 id="1-2-实验设置"><a href="#1-2-实验设置" class="headerlink" title="1.2 实验设置"></a>1.2 实验设置</h2><strong>操作痕迹特征的数据集</strong><br>Dresden图像数据集作为原始图像，以8:1:1的比例划分训练验证和测试集。每个图像分为256<em>256的patch，共有1.25M个patches。合成IMC样本的方法：1. 以统一的随机方式选择patch P和操作y(·)2. 把操作y应用到patch P 3. 把 y(P)随机裁剪为128</em>128的区域作为X， (X,y)是分类任务的输入和输出样本对。<br>KCMI数据集用来检查IMC网络的泛化能力和敏感性，包含2475个样本。把数据随机分为两半，一半用于（K = 7）最近邻分类器，另一半用于测试。<br><strong>异常检测的数据集</strong><br>在训练和验证中使用四个合成数据集：拼接数据集，复制移动数据集，（使用内置opencv 修复函数在Dresden 基础图像上合成的）消除数据集，增强数据集。合成增强数据集方法：1. 引入一个随机结构化的二进制掩码M 2. 使用<br>Z=P (1-M)+y(P) M合成篡改图像，P是原始图像，y是操作,  (Z,M)是LADN的输入输出对。用于训练的patch大小是256×256。<br><strong>训练设置</strong><br>Batch size=64，1000 batches per epoch。初始学习率1e-4，不衰减，使用adam优化器。如果验证集上的损失在20 epoch不改善的话，学习率减半。使用交叉熵损失优化图像处理分类和异常检测任务。  <h1 id="2-操作痕迹特征"><a href="#2-操作痕迹特征" class="headerlink" title="2 操作痕迹特征"></a>2 操作痕迹特征</h1><h2 id="2-1骨干网络结构的研究"><a href="#2-1骨干网络结构的研究" class="headerlink" title="2.1骨干网络结构的研究"></a>2.1骨干网络结构的研究</h2>之前IFID和IMC没有主要网络架构，因此作者在三个网络（VGG ，ResNet 和DnCNN ）之间进行了比较。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191223165705.png" alt=""><br>IMC-7：研究7个一般操作的分类：压缩，模糊，形态，对比度操作，额外噪声，重采样，量化。结果表明，VGG结构在训练、验证和测试表现出最好的分数，所以作者选用了VGG结构。<br>在选择网络的第一层时，比较了 [55]的SRMConv2D和[10]的Conv2D layers的BayarConv2D以及三者的特征拼接起来的结合版本。从表3可知不同的特征类型在IMC-7的表现没有多少差异，但结合版本的表现最好，所以作者使用结合版本作为第一个卷积层。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191223165855.png" alt="">  <h2 id="2-2-细粒度操作类型研究"><a href="#2-2-细粒度操作类型研究" class="headerlink" title="2.2 细粒度操作类型研究"></a>2.2 细粒度操作类型研究</h2>作者系统地研究了具有更多类型和更细微差异的操作，共385种操作类型。值得一提的是，本文是第一个考虑这种大量细粒度操作类型的人。<br>作者将7个操作族(0级层次)逐步分解为单独的算法(5级层次)。如模糊族分解为1级层次的高斯模糊、框模糊、小波去噪和中值滤波。然后把高斯模糊的内核大小为3、5和7记为2级层次，这样一直分解到5级层次。表4是作者在等级i上训练的模型在层次j上实验的结果（i&gt;j）。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191223165943.png" alt=""><br>可以看出，细粒度分类可以提高验证集上的准确率和kcmi的测试准确率。<br>暴露出问题，目前对于细粒度分类的结果不理想，所以作者在更广和更深以及结合版本三个方向做调整，下表是实验结果。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191223170029.png" alt=""><br>结果是IMC-VGG-W&amp;D结构效果好。  <h2 id="2-3讨论"><a href="#2-3讨论" class="headerlink" title="2.3讨论"></a>2.3讨论</h2><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191223170113.png" alt=""><br>图3a是IMC-385的IMC-VGG-W&amp;D结构的混淆矩阵，可以看出网络把JPEGCompression误分类到JPEGDoubleCompression，这矩阵反映了操作痕迹网络的一个明显缺点：对压缩操作容易误分类。  <h1 id="3-局部异常检测网络"><a href="#3-局部异常检测网络" class="headerlink" title="3.    局部异常检测网络"></a>3.    局部异常检测网络</h1>局部异常检测网络组成部分：1.适应异常检测任务的操作痕迹特征 2.异常特征提取 3.整体上考虑异常特征，在每像素决策。作者重点讨论异常特征提取。<h2 id="3-1异常特征提取"><a href="#3-1异常特征提取" class="headerlink" title="3.1异常特征提取"></a>3.1异常特征提取</h2>人类识别篡改区域的方法：1.找到图像里的明显特征 2.任何与这个完全不同的是异常的。顺着这个思路，讨论两个关键任务1.显性特征是什么，如何计算2.如何量化局部特征和参考显性特征。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191223190728.png" alt=""></li>
+</ol>
+<p>新的问题出现了：在两个以上的区域使用不同的操作。如，一幅图原始背景区域B，包含两个不相邻的篡改区域R1和R2时，网络不能同时找出两个区域。<br>作者的补救办法：从一个足够大的局部窗口计算参考特征，减轻其他篡改区域特征的影响。在AveragePool2D层计算window-wise偏差特征<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191223190936.png" alt=""><br>D_F^(n×n) [i,j]=F[i,j]-μ_F^(n×n) [i,j]    (6)<br>为确定测试样本的n，采用多分辨率分析，收集不同窗口大小的Z-分数。在ZPool2D层计算F到Z-分数的转换。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191223191003.png" alt=""><br>Z_F^*=[z_F^(n_1×n_1 ),…,z_F^(n_k×n_k ),Z_F]        (7)<br>根据人的决策过程，当一个人看不清东西时会靠近一些。所以，作者沿新的人工时间维度，产生4d特征。在ConvLSTM2D层，以序列顺序分析不同窗口尺寸的Z-分数误差。  </p>
+<h2 id="3-2异常检测消融实验"><a href="#3-2异常检测消融实验" class="headerlink" title="3.2异常检测消融实验"></a>3.2异常检测消融实验</h2><p><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191223170530.png" alt=""><br>窗口尺寸越大，整体表现越好。相比于FAC（特征轴线）拼接，使用TAC（时间轴线）拼接Z*F特征，效果更好。</p>
+<h1 id="4-实验评估"><a href="#4-实验评估" class="headerlink" title="4.    实验评估"></a>4.    实验评估</h1><h2 id="4-1预训练模型和泛化能力测试"><a href="#4-1预训练模型和泛化能力测试" class="headerlink" title="4.1预训练模型和泛化能力测试"></a>4.1预训练模型和泛化能力测试</h2><p>选择基于部分卷积的CNN修复方法、 PS-battle数据集，通过计算图像级AUC来评估模型性能。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191223170622.png" alt=""><br>经过全随机权值训练的全随机模型不能很好地泛化，因为它与合成数据过拟合，而合成数据中出现的伪造线索与现实世界中的有很大不同。通过冻结图像操作痕迹特征（IMTF）并使用随机LADN权重训练的半冻结模型确实可以防止过拟合，但是消除了为其他伪造类型找到更好特征的希望，因为已知操作痕迹特征可以优化为 增强数据集（请参阅表6中的“增强”列），但不用于拼接，复制移动或删除。<br>半随机模型允许以较低的5e-5学习速率更新这些权重，从而防止过度拟合。因此，采用半随机模型。<br>          全随机 半冻结 半随机 不理解</p>
+<h2 id="4-2敏感性和鲁棒性测试"><a href="#4-2敏感性和鲁棒性测试" class="headerlink" title="4.2敏感性和鲁棒性测试"></a>4.2敏感性和鲁棒性测试</h2><p>使用F1分数作为衡量指标，计算公式如下。<br>$F_1=2·(precision·recall)/(precision+recall)    $    (8)<br>$precison=TP/(TP+FP)            $                (9)<br>$recall=TP/(TP+FN)        $                        (10)<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191223171057.png" alt=""><br>由上图看出MT-NET对于附加的噪声和模糊准确率很高，当线性调整因子变小时，或者JPEG压缩质量因子变小时，网络F1分数下降。对基于DNN的操作（如深度图像修复）和序列操作（如增强，行压缩，调整尺寸）鲁棒性好。  </p>
+<h2 id="4-3与SOTA方法的比较"><a href="#4-3与SOTA方法的比较" class="headerlink" title="4.3与SOTA方法的比较"></a>4.3与SOTA方法的比较</h2><p>将MT-NET的性能与[55]的数据比较，[55]提供了经典非监督方法ELA , NOI1 , CFA1, 和最近基于深度学习的方法, MFCN and J-LSTM 在数据集：NIST 2016 , CASIA , COVERAGE, and Columbia dataset上的分数。作者进行实验后，Man-tra Net在NIST和Columbia数据集上排名第二，分别是79.5%和85.8%。在COVERAGE和CASIA数据集上分数最高，分别为81.9%和81.7%。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191223171228.png" alt=""><br>结论MT-NET：1. 明显优于传统的无监督方法。2. 可与最新的DNN方法媲美。3. 在所有测试集上效果稳定，泛化能力良好。<br>处理速度，MT-NET每幅图像（1024*768）约0.8s在单NVIDIA 1080Ti GPU。  </p>
+<h2 id="4-4-局限"><a href="#4-4-局限" class="headerlink" title="4.4 局限"></a>4.4 局限</h2><p>ManTra-Net在以下情况效果差：1. 图像是完全再生（如样式转换）2. 被高度相关的噪声污染。3. 多个区域的操作方式不同。<br>对于第三个问题，文中提到，一幅图片有AB两个篡改区域，ManTra-Net找到其中之一。但在选定范围的情况下，ManTra-Net可以准确定位篡改区域，这说明ManTra-Net可作IFLD计算机辅助工具。<br><strong>相关概念：</strong><br>IFLD（image forgery localization/detection）：图像篡改检测定位任务<br>IMC（image manipulation classification）：图像操作分类任务<br>消融实验：类似控制变量，当模型非常复杂的时候，想要验证其中的一个结构是否work，就把去掉该结构的网络与加上该结构的网络所得到的结果进行对比。<br>端到端学习：深度学习模型在训练过程中，从输入端（输入数据）到输出端会得到一个预测结果，与真实结果相比较会得到一个误差，这个误差在模型中反向传播，每一层的表示都会根据这个误差来做调整，直到模型收敛或达到预期的效果才结束，中间所有的操作都包含在神经网络内部。与多模块处理相比，端到端的学习省去了在独立学习任务执行之前繁杂的数据标注。<br><strong>思考：</strong><br>1.ManTra-Net的优点：<br>1)    是基于深度学习的端到端的网络，不需对网络各个组件分别训练。<br>2)    不需要繁杂的数据预处理、后处理，省时省力。<br>3)    可以检测多种篡改手段。<br>4)    首次考虑大量细粒度操作，最高达到385种操作类型。<br>5)    模拟人类决策过程，把图像篡改定位作为局部异常检测问题，提出Z-分数捕捉局部异常。<br>6)    在多个数据集上泛化能力很好。<br>2.值得学习的地方<br>1)    作者在设计网络结构时，从骨干网络开始，具体到网络的某一层，在选择时都经过认真实验比较，最后才选定的，这值得我们学习。<br>2)    考虑改进方法时，作者会思考多个改进方向，以及设法将之结合起来，再进行实验，往往结果是结合版本效果好，启发我们也可以按此思路进行设计。<br>3)    尽管局部模糊处理对于欺骗基于边缘的篡改检测方法非常有效，但ManTra-Net完全不受此类攻击的影响，可以借鉴这部分的结构。<br>3.待改进之处<br>1)    网络对噪声和模糊鲁棒性很好。对小尺寸图像（256*256左右）效果还可以，但大尺寸效果不太好，有待优化。<br>2)    由于局部异常检测的性质，当真实情况下篡改了超过50％的像素时，预测结果不准。可以考虑如何检测大面积篡改区域。<br>3)    文中说存在两个篡改区域时，效果不太好。网络对两个同一篡改手段检测或者两个不同篡改手段检测或者两个以上篡改区域的检测还有待研究。<br>4)    作者说对于face swapping和deep image inpainting有良好的泛化能力，但这里叙述不是很详细，文中没介绍在这类数据集上的实验。<br>4.不明白的地方<br>1)    篡改的图像有意被高度相关的噪声污染，对于这种方式，不太理解。<br>2)    作者模拟由远及近的分析方法那里，需要再研读。<br>3)    不是特别理解是如何根据多分辨率方法确定测试样本的n的。<br>5.论文代码 <a href="https://github.com/ISICV/ManTraNet" target="_blank" rel="noopener">https://github.com/ISICV/ManTraNet</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AF%A1%E6%94%B9%E6%A3%80%E6%B5%8B/" rel="tag"># 篡改检测</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/12/16/Detection-of-GAN-generated-Fake-Images-over-Social-Networks/" rel="prev" title="Detection of GAN-generated Fake Images over Social Networks 笔记">
+      <i class="fa fa-chevron-left"></i> Detection of GAN-generated Fake Images over Social Networks 笔记
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#摘要"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-操作追踪网络"><span class="nav-number">2.</span> <span class="nav-text">1 操作追踪网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-1-网络结构概述"><span class="nav-number">2.1.</span> <span class="nav-text">1.1 网络结构概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-2-实验设置"><span class="nav-number">2.2.</span> <span class="nav-text">1.2 实验设置</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-操作痕迹特征"><span class="nav-number">3.</span> <span class="nav-text">2 操作痕迹特征</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1骨干网络结构的研究"><span class="nav-number">3.1.</span> <span class="nav-text">2.1骨干网络结构的研究</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-细粒度操作类型研究"><span class="nav-number">3.2.</span> <span class="nav-text">2.2 细粒度操作类型研究</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3讨论"><span class="nav-number">3.3.</span> <span class="nav-text">2.3讨论</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-局部异常检测网络"><span class="nav-number">4.</span> <span class="nav-text">3.    局部异常检测网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1异常特征提取"><span class="nav-number">4.1.</span> <span class="nav-text">3.1异常特征提取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2异常检测消融实验"><span class="nav-number">4.2.</span> <span class="nav-text">3.2异常检测消融实验</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-实验评估"><span class="nav-number">5.</span> <span class="nav-text">4.    实验评估</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1预训练模型和泛化能力测试"><span class="nav-number">5.1.</span> <span class="nav-text">4.1预训练模型和泛化能力测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2敏感性和鲁棒性测试"><span class="nav-number">5.2.</span> <span class="nav-text">4.2敏感性和鲁棒性测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-3与SOTA方法的比较"><span class="nav-number">5.3.</span> <span class="nav-text">4.3与SOTA方法的比较</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-4-局限"><span class="nav-number">5.4.</span> <span class="nav-text">4.4 局限</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Qi na"
+      src="/images/head.jpg">
+  <p class="site-author-name" itemprop="name">Qi na</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qi na</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.1.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.6.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+</body>
+</html>
