@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="论文题目 使用简单特征揭露Deepfake年份 2019出处 aiXiv 2019.11.8作者 Ricard Durall , Margret Keuper , Franz-Josef Pfreundt, Janis Keuper德国，海德堡大学 ，奥芬堡大学">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Unmasking DeepFakes with simple Features 笔记">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2019&#x2F;12&#x2F;25&#x2F;Unmasking-DeepFakes-with-simple-Features&#x2F;index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="论文题目 使用简单特征揭露Deepfake年份 2019出处 aiXiv 2019.11.8作者 Ricard Durall , Margret Keuper , Franz-Josef Pfreundt, Janis Keuper德国，海德堡大学 ，奥芬堡大学">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191225102440.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191225112637.png">
+<meta property="article:published_time" content="2019-12-25T01:33:03.000Z">
+<meta property="article:modified_time" content="2019-12-25T07:56:41.510Z">
+<meta property="article:author" content="Qi na">
+<meta property="article:tag" content="篡改检测">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20191225102440.png">
+
+<link rel="canonical" href="http://yoursite.com/2019/12/25/Unmasking-DeepFakes-with-simple-Features/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Unmasking DeepFakes with simple Features 笔记 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/25/Unmasking-DeepFakes-with-simple-Features/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
+      <meta itemprop="name" content="Qi na">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Unmasking DeepFakes with simple Features 笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2019-12-25 09:33:03 / 修改时间：15:56:41" itemprop="dateCreated datePublished" datetime="2019-12-25T09:33:03+08:00">2019-12-25</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>论文题目</strong> 使用简单特征揭露Deepfake<br><strong>年份</strong> 2019<br><strong>出处</strong> aiXiv 2019.11.8<br><strong>作者</strong> Ricard Durall , Margret Keuper , Franz-Josef Pfreundt, Janis Keuper<br>德国，海德堡大学 ，奥芬堡大学<br><a id="more"></a><br><a href="https://github.com/cc-hpc-itwm/DeepFakeDetection" target="_blank" rel="noopener">代码链接</a></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li>提出使用经典频域分析+基本分类器的方法来检测DeepFakes  </li>
+<li>仅使用少量标记训练数据  </li>
+<li>在高分辨率Faces-HQ（由本文提出）和中分辨率CelebA达到100%的准确率。在低分辨率FaceForensics++达到96%分辨率</li>
+</ol>
+<hr>
+<p>&nbsp;&nbsp;可直接看 related work 部分</p>
+<hr>
+<h1 id="abstract"><a href="#abstract" class="headerlink" title="abstract"></a>abstract</h1><p>本文提出一个检测DeepFakes的简单方法，在经典频域分析后跟一个基本分类器。<br>与之前需要使用大量标记数据训练的方法相比，本文的方法只使用很少标记的训练样本，也可在完全无监督的情况下达到高准确率（accuracy）。<br>第一个实验，把几个真假face的公开数据集结合成一个新的数据集：Faces-HQ。给定高分辨率的图像，在20个标记样本上训练，本文方法达到100%的分类准确率。<br>第二个实验：在中等分辨率的数据集CelebA上，监督（情况下）达到100%准确率，非监督（情况下）达到96%.<br>第三个实验：低分辨率视频序列数据集FaceForensics++上，本文方法达到91%准确率。   </p>
+<h1 id="introduction"><a href="#introduction" class="headerlink" title="introduction"></a>introduction</h1><p>深度学习模型可以产生逼真的人造图像，这些模型基于深度卷积网络，可以近似给定训练集的真实数据分布。两个常用方法是Variational Autoencoders(VAE)和Generative Adversarial Networks (GAN)。<br>图像篡改检测也有很大发展，但是目前的大多数方法依赖于深度学习方法，这需要大量的标记训练数据。本文解决了检测fake faces的问题。本文提出一个新的机器学习方法，这个方法依赖于经典的频率分析图像，在高频上揭示不同的行为。图1是Faces-HQ子数据集的功率频谱统计。在高频时，真假数据的差异明显。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191225102440.png" alt=""><br>本文的方法通过分析一个简单的有监督或无监督分类器的频域范围来检测这些人工痕迹。请注意，这个方法不涉及也不需要大量的数据，对于那些数据稀缺的场景来说，这非常方便。<br>本文的贡献：</p>
+<ol>
+<li>提出一个新颖的基于频域分析的分类方法来检测合成脸。</li>
+<li>提供高品质的公开数据集Faces-HQ，包括有来自不同公开数据集的真假脸。  </li>
+<li>证明了我们如何成功学习检测篡改：在高分辨率Faces-HQ和中分辨率CelebA达到100%的准确率。在低分辨率FaceForensics++达到96%分辨率。  </li>
+</ol>
+<hr>
+<h1 id="related-work"><a href="#related-work" class="headerlink" title="related work"></a>related work</h1><p>&nbsp;&nbsp;&nbsp;&nbsp;简要回顾有关高分辨率人工图像取证和深度伪造图像，以及篡改检测的开创性工作。特别地，本文将注意力集中在基于GAN生成的篡改图像的识别上。<br>&nbsp;&nbsp;&nbsp;&nbsp;传统图像取证可根据它们的目标特征分类，局部噪声估计[23]，模式分析[10]，光照建模[9]，隐写特征分类[7]。随着深度学习的突破，计算机视觉社区已经转向了神经网络技术。如[8][28]是基于卷积神经网络，这些方法以一种不明确的方式捕捉上述提到的特征。<br>&nbsp;&nbsp;&nbsp;&nbsp;后来GAN提出了，deepfake应运而生。<br>&nbsp;&nbsp;&nbsp;人为创建的视频的一个缺点就是看不到眨眼[18]，这是因为缺乏闭着眼睛的训练图像。然而，这种检测可以通过在训练中添加闭着眼睛的图像来绕过。发现不自然的头部姿势，也是一个扩展技术[26]，以检测篡改的数字内容。另一方面[17][22]，从GAN生成的图像和真实图像中分析色彩空间特征，并使用视差对它们进行分类。其他方法[2]，[21]，[27]不是利用明显的缺失,而是依靠CNN来区分GAN的输出与真实图像。[13] 引入具有对比损失函数的深层篡改鉴别器，[12] 通过在CNN上采用递归神经网络（RNN）合并时域信息。<br>&nbsp;&nbsp;&nbsp;&nbsp;尽管深度学习方法显示出令人鼓舞的表现，但关键问题在于GAN可以轻松学习所有这些方法。特别是，通过将它们合并到GAN的鉴别器中，可以对生成器进行微调，以了解针对任何可区分的取证的对策。  </p>
+<h1 id="method"><a href="#method" class="headerlink" title="method"></a>method</h1><p>图2是提出的方法<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191225112637.png" alt=""><br><strong>A 频域分析</strong><br>频域分析在信号处理理论和应用中最重要。在计算机视觉领域，可以在傅里叶变换定义的空间上分析图像的重复性或频率特性。这种转换包括对输入数据进行频谱分解，从而表明信号能量如何在一定频率范围内分布。基于频域分析的方法已经在图像处理中显示出广泛的应用，例如图像分析，图像滤波，图像重建和图像压缩。<br>1)  离散傅里叶变换<br>离散傅立叶变换（DFT）是一种数学技术，可以在给定空间分辨率的情况下，将离散信号分解为从0（即恒定频率，对应于图像平均值）到最大可表示频率的各种频率的正弦分量。它是在等距点上采样的连续傅立叶变换的离散模拟。对于大小为M×N的二维数据，可以将其计算为   </p>
+<center>$X_{k,l} = \displaystyle\sum_{n = 0}^{N-1} \displaystyle\sum_{0}^{M-1}x_{n,m}·e^{-\frac{i2\pi}{N}kn}·e^{-\frac{i2\pi}{M}lm}$                 （1）</center>
+频域信号（Xk）表示有关每个频率下信号幅度和相位的信息。图3描绘了复杂的输出信息（功率和相位）。注意，振幅谱是平方根功率谱。在使用FFT之前把输入图像转成灰度图。  
+![](https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191225151927.png)
+2） 方位平均  
+将傅立叶变换应用于样本图像后，信息将在一个新域中表示，但维数相同。因此，假设我们使用图像，则输出仍包含2D信息。我们应用方位角平均来计算FFT功率谱的稳健一维表示。可以将其视为压缩，将相似的频率分量收集并平均为特征向量。这样，我们可以减少功能数量而不会丢失相关信息。此外，在整个压缩过程中，我们实现了输入的更强大表示。图4示出了这种方法的视觉示例。    
+![](https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20191225151949.png)
+**B 分类算法**  
+分类是一项任务，通过使用实例的特定示例来学习从属性空间到离散类的一般映射，每个实例均由属性值及其对应的符号向量表示。  
+
+1） 逻辑回归  
+这是一个简单的统计模型，它采用逻辑函数对二进制因变量进行建模。假设h的输出是估计的概率。这用于推断输入x可以给定预测值的可信度。 Logistic回归公式为  
+<center>$h_w(x)=\frac{1}{1+e^{-w^Tx}}$                （2）</center>
+最大似然估计的基础算法确定了模型的回归系数w，该模型准确地预测并拟合了二进制因变量的概率。当满足收敛标准或达到最大迭代次数时，算法停止。  
+2） 支持向量机  
+支持向量机（SVM）[3]，[6]是用于（非线性）数据分类的最广泛使用的学习算法。SVM公式化的目标是产生一个模型（基于训练数据），该模型将确定最佳的分离超平面，最大化不同类别之间的余量。给定一组训练的实例标签对$(x_i ,y_i)，i=1,...,l ，x_i \in R^n, y\in(1,-1)^l$通过求解以下优化问题，实现了支持向量机的训练。  
+<center>$\min\limits_{w,b,\xi}\frac{1}{2}\| w \| ^2+C \displaystyle \sum_{i=1}^{l}\xi_i $                （3）</center>  
+
+<p><center>s.t. $y_i(w^T\phi(x_i)+b)\geq 1-\xi_i \ ,\xi_i\geq 0$</center><br>w,b是分类器参数，$\xi$是松弛变量，C&gt;0是误差项的惩罚参数。<br>训练向量$x_i$通过函数$\phi$映射到高维空间.SVM的训练目标是在此高维空间中找到具有最大余量的线性分离超平面。  </p>
+<p>3）K均值聚类<br>虽然像SVM和LR这样的监督分类算法依赖于标记的训练示例来学习分类，但我们也希望在没有任何标记数据的情况下测试检测性能。聚类是一种无监督的机器学习技术，可在数据点中查找相似之处并将相似的数据点分组在一起。关键假设是要素空间中的邻近点表现出相似的质量，并且可以将它们聚在一起。可以使用不同的技术（例如K均值聚类）来完成聚类。<br>K均值函数目标如下</p>
+<p><center>$J=\displaystyle \sum_{k=1}^{K}\displaystyle \sum_{i=1}^{m}\|x_i-\mu_k\|^2$                    （4）</center><br>k,m 分别是聚类和样本数量<br>启发式近似解决方案的一种常用方法是根据从初始质心计算出的距离来迭代地识别附近的特征。然后，将这些特征分配给最近的聚类，并重估质心。由于簇的数量由用户确定，因此可以轻松地用于分类中，在该分类中，我们将数据分为K个簇，其中K等于或大于类数。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AF%A1%E6%94%B9%E6%A3%80%E6%B5%8B/" rel="tag"># 篡改检测</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2019/12/23/ManTra-Net-Manipulation-Tracing-Network-For-Detection-And-Localization-of/" rel="prev" title="ManTra-Net: Manipulation Tracing Network For Detection And Localization of Image Forgeries With Anomalous Features">
+      <i class="fa fa-chevron-left"></i> ManTra-Net: Manipulation Tracing Network For Detection And Localization of Image Forgeries With Anomalous Features
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">1.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#abstract"><span class="nav-number">2.</span> <span class="nav-text">abstract</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#introduction"><span class="nav-number">3.</span> <span class="nav-text">introduction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#related-work"><span class="nav-number">4.</span> <span class="nav-text">related work</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#method"><span class="nav-number">5.</span> <span class="nav-text">method</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Qi na"
+      src="/images/head.jpg">
+  <p class="site-author-name" itemprop="name">Qi na</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qi na</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.1.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.6.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+</body>
+</html>
