@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="论文题目 并行解码网络的快速图像修复年份 2019出处 CVPR作者 Min-cheol Sagong1, Yong-goo Shin1, Seung-wook Kim1, Seung Park1, Sung-jea Ko2Korea university">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PEPSI : Fast Image Inpainting with Parallel Decoding Network阅读">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;16&#x2F;PEPSI-Fast-Image-Inpainting-with-Parallel-Decoding-Network%E7%AC%94%E8%AE%B0&#x2F;index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="论文题目 并行解码网络的快速图像修复年份 2019出处 CVPR作者 Min-cheol Sagong1, Yong-goo Shin1, Seung-wook Kim1, Seung Park1, Sung-jea Ko2Korea university">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200216221025.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200216221057.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200216221208.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200216221320.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200216211118.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200216222700.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217080823.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217080904.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217081012.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217081049.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200216224702.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200216225211.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217081944.png">
+<meta property="article:published_time" content="2020-02-16T12:21:38.000Z">
+<meta property="article:modified_time" content="2020-02-17T00:23:23.904Z">
+<meta property="article:author" content="Qi na">
+<meta property="article:tag" content="inpainting">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200216221025.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/02/16/PEPSI-Fast-Image-Inpainting-with-Parallel-Decoding-Network%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>PEPSI : Fast Image Inpainting with Parallel Decoding Network阅读 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/16/PEPSI-Fast-Image-Inpainting-with-Parallel-Decoding-Network%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
+      <meta itemprop="name" content="Qi na">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PEPSI : Fast Image Inpainting with Parallel Decoding Network阅读
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-16 20:21:38" itemprop="dateCreated datePublished" datetime="2020-02-16T20:21:38+08:00">2020-02-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-17 08:23:23" itemprop="dateModified" datetime="2020-02-17T08:23:23+08:00">2020-02-17</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>论文题目</strong> 并行解码网络的快速图像修复<br><strong>年份</strong> 2019<br><strong>出处</strong> CVPR<br><strong>作者</strong> Min-cheol Sagong1, Yong-goo Shin1, Seung-wook Kim1, Seung Park1, Sung-jea Ko2<br>Korea university<br><a id="more"></a><br><strong>摘要 创新点</strong><br>采用具有上下文关注模块（CAM）的由粗到细网络的基于生成对抗网络（GAN）的方法在图像修复中显示出杰出的结果。然而，由于该方法的特征编码分为两阶段，<strong>需要大量的计算资源。</strong><br>为了解决这一问题，本文提出了一种新的网络结构PEPSI，采用由一个<strong>共享编码网络</strong>和一个具有粗路径和修复路径的<strong>并行解码网络</strong>组成的结构，可以减少卷积操作的数量。粗路径产生一个初步的修复结果，利用该结果训练编码网络来预测上下文关注的特征。同时，该修复路径利用CAM重建的精细特征，创造了更高质量的修复结果。  </p>
+<p><strong>数据集</strong><br>Celeb-A、place2和Imagenet<br><strong>实验配置</strong><br>CPU Intel(<br>R) Xeon(R) CPU E3-1245 v5 and GPU TITAN X (Pascal),<br>and implemented in TensorFlow v1.8.<br><strong>网络结构</strong></p>
+<blockquote>
+<p>通过单编码网络提取特征，单解码网络生成高质量修复图片。为了使一个单共享编码网络同时实现粗略完成的结果和高质量的结果的特征生成，我们提出了一种使用具有粗路径和修复路径的并行解码网络的联合学习方法。粗路径产生一个粗略完成的结果，利用该结果训练编码网络来预测CBM的特征。同时，利用CAM重建的精细特征，使修复路径产生了更高质量的修复结果。我们还对CAM进行了改进，用欧式距离代替余弦相似度来更好地学习块之间的关系。我们进行了大量的实验，证明我们的方法在各种数据集上都优于传统方法，如Celeb-A、place2和Imagenet。我们同时使用<strong>随机正方形模板和自由形状的模板</strong>来模仿人类的笔刷。实验结果表明，与传统方法相比，该方法不仅具有更好的性能，而且大大缩短了计算时间。<br>综上所述，本文提出:<br>提出了一种新的生成网络，通过将粗到细网络的级联网络统一起来，并对CAM进行修改，在提高绘制性能的同时，减少了计算资源。<br>一种新颖的图像区域分离识别器，更适合于实际应用。<br><strong>Coarsetofine network</strong><br>参考<img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200216221025.png" alt=""> 两篇论文<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200216221057.png" alt=""><br>Yu等人提出了粗细网络，将修复任务分成两阶段来完成，分别已经在上述两篇论文得到验证。首先，使用粗网络产生一个粗略的预测结果，然后，使用细网络从粗略填充的结果中提取特征，以此来增强结果。为了产生一个高质量的结果，网络需要知道背景和缺失区域之间的关系。细网络使用CAM来学习区域间的关系，并计算区域之间的余弦相似度。如图2所示，CAM首先将特征图分成目标前景和周围背景，并提取3x3的块。CAM利用公式2作为权重，通过对背景块的加权和来重建前景区域的特征，从而了解它们之间的关系。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200216221208.png" alt=""><br>作者证明<strong>完整的粗细网络</strong>比没有粗网络的结果好。如果缺失区域的粗特征编码不够好，CAM会使用不相关的特征块产生缺失的特征，从而产生污染结果，如图3中d图。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200216221320.png" alt=""><br><strong>网络结构  </strong><br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200216211118.png" alt=""><br>编码网络，从含有缺失区域的输入图像中提取特征，并在不产生粗糙结果的情况下补全确实的特征。首先，在第一层卷积层，使用5x5的卷积核来充分利用输入图像中的潜在特征。然后，是一系列的3x3卷积，通道数在不断增加。最后，使用4层扩张卷积，rate=2，通道数为356。<br>解码网络，由并行的粗路径和修复路径构成。通过两个路径分享权重，来规范化修复路径。两条路径采用了相同的编码网络的特征，于是，强迫编码网络生成合理的内容。在测试时，只采用了修复路径，来减少计算资源。粗路径使用L1损失来训练，而修复路径使用L1损失和GAN损失。<br>在实现时，对所有的卷积层使用了细小的padding，此外，除了最后一层，其它层采用激活函数ELU，并对图像进行归一化到[-1,1]。<br><strong>Modified CAM</strong><br>传统的CAM采用余弦相似度来度量相似度评分。但是这种方法会对特征块向量进行归一化，会导致语义特征表示失真。<br>因此，作者用欧几里得距离直接衡量相似度得分(原因：为欧氏距离不仅考虑特征块的两个向量之间的夹角，而且考虑特征块的大小)。<br>但是，直接使用欧几里得距离来衡量的话，不利于后面使用softmax进行归一化。(欧几里得距离区间为0~正无穷)所以，作者采用了自己定义的截断距离相似度评分。<br><strong>Region Ensemble Discriminator(RED)</strong><br>传统的全局和局部鉴别器不仅针对整体图像的相关性，而且针对hole region的局部纹理。然而，在实际应用中，局部判别器只能处理方形尺寸固定的孔洞区域，而在实际应用中，孔洞的位置、形状和尺寸可以是任意的。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200216222700.png" alt=""><br>RED将最后一层的特征划分为像素方向的块，并通过全连通层分别区分真假特征。由于RED试图对每个具有不同接受域的特征块分别进行分类，所以它分别判断不同的图像区域是真实的还是虚假的。<br><strong>损失函数</strong><br>作者使用重构L1损失对产生粗图片路径进行了显式训练，而对细化路径进行了L1损失和GAN损失的训练<br>细化路径的对抗损失：<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217080823.png" alt=""><br>细化路径的整体损失：<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217080904.png" alt=""><br>X (n)和Y (n)是第n个图像的生成的图像和其相应的原始输入图像，n是代表是这个mini-batch中的第几个输入图像，N是mini-batch图像对的数量,和λi，λadv为hyper-parameters来平衡不同损失的权重。<br>粗路径：<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217081012.png" alt=""><br>总损失：k和kmax分别表示学习过程的第几次迭代和最大迭代次数<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217081049.png" alt=""><br><strong>实验结果</strong><br>定性分析<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200216224702.png" alt=""><br>gated conv的一个小缺点：孔和背景区域之间缺乏相关性，例如眼睛的对称性。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200216225211.png" alt=""><br>定量分析  </p>
+<blockquote>
+<p><strong>PSNR</strong>（Peak Signal to Noise Ratio）峰值信噪比，一种全参考的图像质量评价指标。不过许多实验结果都显示，PSNR的分数无法和人眼看到的视觉品质完全一致，有可能PSNR较高者看起来反而比PSNR较低者差。这是因为人眼的视觉对于误差的敏感度并不是绝对的，其感知结果会受到许多因素的影响而产生变化（例如：人眼对空间频率较低的对比差异敏感度较高，人眼对亮度对比差异的敏感度较色度高，人眼对一个区域的感知结果会受到其周围邻近区域的影响）。<br><strong>SSIM</strong>（structural similarity）结构相似性，也是一种全参考的图像质量评价指标，它分别从亮度、对比度、结构三方面度量图像相似性。当其中一张为无失真的图片，另一张是失真图片时，二者的SSIM可以看成是失真图片的影响品质衡量指标。相比于PSNR，SSIM在图片品质的衡量上更能符合人眼对图片质量的判断。SSIM取值范围[0,1]，值越大，表示图像失真越小.  </p>
+</blockquote>
+<p><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217081944.png" alt=""></p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/inpainting/" rel="tag"># inpainting</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/15/Free-Form-Image-Inpainting-with-Gated-Convolution-%E7%AC%94%E8%AE%B0/" rel="prev" title="Free-Form Image Inpainting with Gated Convolution 阅读">
+      <i class="fa fa-chevron-left"></i> Free-Form Image Inpainting with Gated Convolution 阅读
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Qi na"
+      src="/images/head.jpg">
+  <p class="site-author-name" itemprop="name">Qi na</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qi na</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.1.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.6.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+</body>
+</html>

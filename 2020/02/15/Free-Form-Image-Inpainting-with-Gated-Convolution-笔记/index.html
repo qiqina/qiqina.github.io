@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="论文题目 带门控卷积的自由形式图像修复年份 2019出处 ICCV作者 Jiahui Yu(余家辉[http:&#x2F;&#x2F;jiahuiyu.com&#x2F;] ) Zhe Lin2 Jimei Yang2 Xiaohui Shen3 Xin Lu2(adobe 团队) Thomas Huang1(黄煦涛)DeepFill v2 [https:&#x2F;&#x2F;github.com&#x2F;JiahuiYu&#x2F;generative_inp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Free-Form Image Inpainting with Gated Convolution 阅读">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;15&#x2F;Free-Form-Image-Inpainting-with-Gated-Convolution-%E7%AC%94%E8%AE%B0&#x2F;index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="论文题目 带门控卷积的自由形式图像修复年份 2019出处 ICCV作者 Jiahui Yu(余家辉[http:&#x2F;&#x2F;jiahuiyu.com&#x2F;] ) Zhe Lin2 Jimei Yang2 Xiaohui Shen3 Xin Lu2(adobe 团队) Thomas Huang1(黄煦涛)DeepFill v2 [https:&#x2F;&#x2F;github.com&#x2F;JiahuiYu&#x2F;generative_inp">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217080212.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217080313.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217080359.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217065521.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217073744.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200216220001.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217071445.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217072910.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217073127.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217073213.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217073407.png">
+<meta property="article:published_time" content="2020-02-15T10:12:03.000Z">
+<meta property="article:modified_time" content="2020-02-17T00:31:31.196Z">
+<meta property="article:author" content="Qi na">
+<meta property="article:tag" content="inpainting">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200217080212.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/02/15/Free-Form-Image-Inpainting-with-Gated-Convolution-%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Free-Form Image Inpainting with Gated Convolution 阅读 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/15/Free-Form-Image-Inpainting-with-Gated-Convolution-%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
+      <meta itemprop="name" content="Qi na">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Free-Form Image Inpainting with Gated Convolution 阅读
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-15 18:12:03" itemprop="dateCreated datePublished" datetime="2020-02-15T18:12:03+08:00">2020-02-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-17 08:31:31" itemprop="dateModified" datetime="2020-02-17T08:31:31+08:00">2020-02-17</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>论文题目</strong> 带门控卷积的自由形式图像修复<br><strong>年份</strong> 2019<br><strong>出处</strong> ICCV<br><strong>作者</strong> Jiahui Yu(余家辉[<a href="http://jiahuiyu.com/" target="_blank" rel="noopener">http://jiahuiyu.com/</a>] ) Zhe Lin2 Jimei Yang2 Xiaohui Shen3 Xin Lu2(adobe 团队) Thomas Huang1(黄煦涛)<br>DeepFill v2 [<a href="https://github.com/JiahuiYu/generative_inpainting" target="_blank" rel="noopener">https://github.com/JiahuiYu/generative_inpainting</a>]<br><a id="more"></a><br><strong>摘要 创新点</strong>  </p>
+<ol>
+<li>引入gated convolution算法，以学习所有通道在整个图层上每个空间位置的动态特征选择机制，从而显着改善了自由形式的掩码和输入的颜色一致性和修复质量。</li>
+<li>对于任意形状和位置的mask提出patch-based loss，叫做SN-PatchGAN </li>
+<li>扩展了模型的用户交互性<br><strong>数据集</strong><br>Places2 natural scenes，CelebA-HQ faces.<br><strong>实验配置</strong><br>trained with TensorFlow v1.8, CUDNN v7.0, CUDA v9.0. For testing, it runs at 0.21 seconds per image on single NVIDIA(R) Tesla(R) V100 GPU and 1.9 seconds on Intel(R) Xeon(R) CPU @ 2.00GHz for images of resolution 512 × 512 on<br>average, regardless of hole size.<br><strong>相关概念</strong><br>image inpainting含义： 移除目标。合成缺失区域的内容，使图像看起来真实。</li>
+</ol>
+<p>两种inpainting方法：</p>
+<ol>
+<li>使用低级图像功能进行补丁匹配，可以合成逼真的静止纹理，但是对于非静止的如复杂场景，人脸和物体出现错误。</li>
+<li>深度卷积的前馈生成模型网络，可以利用从大规模数据集中学到的语义，以端到端方式合成非静止图像中的内容。<br>基于香草卷积的生成模型不适合图像洞填充。然后有了partial convolution，仍有局限性。<br>本文提出gated convolution。在每个信道学习动态特性选通机制（例如，内部或外部掩码，RGB通道或用户指引通道）  <blockquote>
+<p><strong>方法</strong><br>gated convolution<br>在<strong>普通卷积</strong>层，应用相同的过滤器来生成输出。对于图像分类和目标检测是有意义的，在这些任务中，输入图像的所有像素都是有效的，以滑动窗口的方式提取局部特征。但是对于图像修复来说，训练过程中会导致模糊，并导致视觉上的伪影。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217080212.png" alt=""><br><strong>部分卷积</strong>采用了掩蔽和重新归一化的步骤，使卷积仅依赖于有效的像素。本质上，部分卷积可以看作是不可学习的单通道特征的硬门控。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217080313.png" alt=""><br>不同于部分卷积的硬门控掩码更新策略，<strong>门控卷积</strong>是从数据中自动学习软掩码。<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217080359.png" alt=""><br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217065521.png" alt=""><br>左边是局部卷积网络，右边是门控网络。<br>公式如下<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217073744.png" alt=""><br>整体网络结构<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200216220001.png" alt=""><br>对于这个网络，输入信息分为三个通道：颜色通道（RGB channel）、掩码通道（mask channel）、手绘通道（sketch channel）。然后是分两步进行的粗细网络得到inpainting结果。输入全卷积光谱归一化马尔可夫(SN-PatchGAN)判别器,得到GAN Loss on Each Neuron<br><strong>结果讨论</strong><br>这个深度学习系统可以帮助用户快速擦除画面上不想要的对象，修改图像的布局、编辑面部，交互式创建对象。<br>定量分析在验证集place2上使用矩形掩码和不规则掩码的mean l1 loss结果<img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217071445.png" alt=""><br>定性分析，与SOA方法对比<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217072910.png" alt=""><br>移除目标对象  <img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217073127.png" alt=""><br>面部编辑、交互式创建新对象<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217073213.png" alt=""><br>文末作者进行了证明SN-PatchGAN作用的消融实验<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200217073407.png" alt="">    </p>
+</blockquote>
+</li>
+</ol>
+<p>参考：<br>门控网络的理解 [<a href="https://blog.csdn.net/yexiaogu1104/article/details/88293200" target="_blank" rel="noopener">https://blog.csdn.net/yexiaogu1104/article/details/88293200</a>]<br>deepfill v1<br>[<a href="http://openaccess.thecvf.com/content_cvpr_2018/html/Yu_Generative_Image_Inpainting_CVPR_2018_paper.html" target="_blank" rel="noopener">http://openaccess.thecvf.com/content_cvpr_2018/html/Yu_Generative_Image_Inpainting_CVPR_2018_paper.html</a>]</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/inpainting/" rel="tag"># inpainting</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/01/20/can-forensic-detectors-identify-GAN-generated-images/" rel="prev" title="can forensic detectors identify GAN generated images 笔记">
+      <i class="fa fa-chevron-left"></i> can forensic detectors identify GAN generated images 笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/02/16/PEPSI-Fast-Image-Inpainting-with-Parallel-Decoding-Network%E7%AC%94%E8%AE%B0/" rel="next" title="PEPSI : Fast Image Inpainting with Parallel Decoding Network阅读">
+      PEPSI : Fast Image Inpainting with Parallel Decoding Network阅读 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Qi na"
+      src="/images/head.jpg">
+  <p class="site-author-name" itemprop="name">Qi na</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qi na</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.1.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.6.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+</body>
+</html>
