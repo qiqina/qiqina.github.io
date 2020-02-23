@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('http://yoursite.com').hostname,
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.6.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: true,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="论文题目 深度匹配和验证网络 DMVN约束图像拼接定位与检测的端到端解决方案年份出处 2017 Mountain View作者 Yue Wu，Wael Abd-Almageed，Prem Natarajan 美国加州信息科学研究所数据集训练 SUN2012 object detection dataset 和 MS COCO dataset测试 the paired CASIA dataset和t">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Deep Matching and Validation Network 阅读">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;02&#x2F;20&#x2F;Deep-Matching-and-Validation-Network-%E9%98%85%E8%AF%BB&#x2F;index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="论文题目 深度匹配和验证网络 DMVN约束图像拼接定位与检测的端到端解决方案年份出处 2017 Mountain View作者 Yue Wu，Wael Abd-Almageed，Prem Natarajan 美国加州信息科学研究所数据集训练 SUN2012 object detection dataset 和 MS COCO dataset测试 the paired CASIA dataset和t">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200223172532.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200223173057.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200223173520.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200223193401.png">
+<meta property="og:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200223192742.png">
+<meta property="article:published_time" content="2020-02-20T08:55:25.000Z">
+<meta property="article:modified_time" content="2020-02-23T11:39:41.615Z">
+<meta property="article:author" content="Qi na">
+<meta property="article:tag" content="篡改检测">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;qiqina&#x2F;Figurebed&#x2F;master&#x2F;img&#x2F;20200223172532.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/02/20/Deep-Matching-and-Validation-Network-%E9%98%85%E8%AF%BB/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>Deep Matching and Validation Network 阅读 | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+  </ul>
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/02/20/Deep-Matching-and-Validation-Network-%E9%98%85%E8%AF%BB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/head.jpg">
+      <meta itemprop="name" content="Qi na">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Deep Matching and Validation Network 阅读
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-20 16:55:25" itemprop="dateCreated datePublished" datetime="2020-02-20T16:55:25+08:00">2020-02-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-02-23 19:39:41" itemprop="dateModified" datetime="2020-02-23T19:39:41+08:00">2020-02-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p><strong>论文题目</strong> 深度匹配和验证网络 DMVN<br>约束图像拼接定位与检测的端到端解决方案<br><strong>年份出处</strong> 2017 Mountain View<br><strong>作者</strong> Yue Wu，Wael Abd-Almageed，Prem Natarajan 美国加州信息科学研究所<br><strong>数据集</strong><br>训练 SUN2012 object detection dataset 和 MS COCO dataset<br>测试 the paired CASIA dataset和the NIST-provided Nimble 2017 image splicing detection dataset<br><strong>实验配置</strong><br>the deep Keras learning framework with the theano backend<br>所有对比方法在Intel Xeon CPU E5-2695@2.40GHz, 本文的DMVN在Nividia TitanX GPU<br><strong>评价指标</strong><br>precision recall f-score AOC分数<br><strong>代码</strong><br><a id="more"></a><br>[code]</p>
+<h5 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h5><p>拼接检测和定位算法通常是输入图像，产生二值决策是否是篡改图像，并且分割出拼接区域。目前算法的缺点1.手工特征对压缩这类操作鲁棒性差。2.（定位和检测）每一阶段，各自优化。<br>本文提出DMVN网络解决CISD（约束图像拼接和检测）问题，能够同时定位和检测。向DMVN输入原图和篡改后的图，DMVN评估原图被篡改的可能性并获取两幅图的mask  </p>
+<h5 id="网络结构"><a href="#网络结构" class="headerlink" title="网络结构"></a>网络结构</h5><p>CISD问题定义为给定图P Q,确定Q是否是拼接篡改，并找出P Q中相对应的拼接区域<br>整体网络结构如图3a：<br>CNN Feature Extractor提取特征—-Deep Dense Matching module输入图像的密集匹配—-inception-based Mask Deconvolution module分割mask—-Visual Consistency Validator module一致性验证—-siameselike module概率估计<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200223172532.png" alt="">  </p>
+<h6 id="拼接定位"><a href="#拼接定位" class="headerlink" title="拼接定位"></a>拼接定位</h6><p>细节结构如图3b<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200223173057.png" alt=""><br>使用VGG16。输入PQ（3<em>256</em>256），得到的Qf Pf（512<em>16</em>16）对于光照缩放旋转有一定鲁棒性。<br><strong>Deep Dense Matching module</strong>包括：Deep Feature Correlation，使用所有可能转换的互相关来详尽地计算匹配响应，如等式1 2<img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200223173520.png" alt=""><br>和Correspondence Match Pooling使用三种池化提取有意义的响应图。如图4<br>这一部分可以1定位潜在拼接区域2对正样本的响应要比负样本产生的响应高得多（请参见图4右半部分的红色虚线）<br><strong>Mask Deconvolution module</strong><br>逐步将响应图解卷积2倍，直到其大小达到输入的大小，即256 * 256。在每个反卷积阶段，我们应用一个初始模块，该模块具有更大的滤波器尺寸和更少的滤波器，生成Pm Qm  </p>
+<h6 id="拼接检测"><a href="#拼接检测" class="headerlink" title="拼接检测"></a>拼接检测</h6><p>首先使用Visual Attention模块将CNN功能中的所有非拼接区域归零。再使用深度特征提取器提取特征，计算两者的差异，推断P是Q的供体的概率。  </p>
+<h4 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h4><h5 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h5><p>依据44描述的非监督生成过程，使用SUN2012 object detection<br>dataset 和 MS COCO dataset创建<strong>训练数据集</strong>。把x的对象变换（缩放旋转平移随机光照变化）粘贴到Y得到Z,XY是正样本,Z是负样本。得到150万，30万，30万合成样本用于训练，验证和测试。<br>使用the deep Keras learning framework with the theano backend<strong>框架</strong><br>首先只关注DMVN模型的定位分支。一旦该定位分支收敛，我们将冻结其权重，添加到检测分支上，并训练检测分支直到收敛。最后，我们解冻所有DMVN权重，并使用随机梯度优化器以学习速率1e-5和动量0.9端对端地训练整个模型。<br>在我们的综合训练，验证和测试数据集上，我们在定位分支上分别达到98.52％，98.67％和97.88％的预测准确度，在检测分支上分别达到97.75％，97.53％和97.69％的预测准确度。   </p>
+<h5 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h5><p><strong>对比方法</strong><br>choose the classic block matching-based approach [27]  （擅长捕捉几乎是复制的区域）<br>the classic Zernike moments-based block matching [33] （解决某一变换，但不能保持拼接区域的完整性）<br>with nearest-neighbor search, the SURF feature-based keypoint matching [10]   （没有有效的关键点）<br>the dense field matching [11].<br><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200223193401.png" alt=""><br><strong>预处理</strong>  裁剪为256×256输入DMVN,256×512输入其他结构<br><strong>测试数据集</strong>the paired CASIA dataset和the NIST-provided Nimble 2017 image splicing detection dataset<br>[本文的casia数据集<a href="https://gitlab.com/rex-yue-wu/Deep-Matching-Validation-Network.git" target="_blank" rel="noopener">https://gitlab.com/rex-yue-wu/Deep-Matching-Validation-Network.git</a>.]<br>使用训练的模型进行测试。  </p>
+<h5 id="评价标准"><a href="#评价标准" class="headerlink" title="评价标准"></a>评价标准</h5><p>precision<br>recall<br>f-score<br>AOC分数   </p>
+<h5 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h5><p><img src="https://raw.githubusercontent.com/qiqina/Figurebed/master/img/20200223192742.png" alt=""><br>本文方法胜在f-score 时间 AOC分数<br>casia数据集结果<br><strong>图片没上传</strong><br>nimble数据集结果  </p>
+<p><strong>不足之处</strong><br>1不能检测小于8×8的拼接物体2nimble不均衡的正负样本更具有挑战性3把来自视频帧的相似但真实的物体当作拼接物体</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%AF%A1%E6%94%B9%E6%A3%80%E6%B5%8B/" rel="tag"># 篡改检测</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/16/PEPSI-Fast-Image-Inpainting-with-Parallel-Decoding-Network%E7%AC%94%E8%AE%B0/" rel="prev" title="PEPSI : Fast Image Inpainting with Parallel Decoding Network阅读">
+      <i class="fa fa-chevron-left"></i> PEPSI : Fast Image Inpainting with Parallel Decoding Network阅读
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/02/23/BusterNet-Detecting-Copy-Move-Image-Forgerywith-Source-Target-Localization%E9%98%85%E8%AF%BB/" rel="next" title="BusterNet: Detecting Copy-Move Image Forgery with Source/Target Localization阅读">
+      BusterNet: Detecting Copy-Move Image Forgery with Source/Target Localization阅读 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#摘要"><span class="nav-number">1.</span> <span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#网络结构"><span class="nav-number">2.</span> <span class="nav-text">网络结构</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#拼接定位"><span class="nav-number">2.1.</span> <span class="nav-text">拼接定位</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#拼接检测"><span class="nav-number">2.2.</span> <span class="nav-text">拼接检测</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实验"><span class="nav-number"></span> <span class="nav-text">实验</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#训练"><span class="nav-number">1.</span> <span class="nav-text">训练</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#测试"><span class="nav-number">2.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#评价标准"><span class="nav-number">3.</span> <span class="nav-text">评价标准</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#结果"><span class="nav-number">4.</span> <span class="nav-text">结果</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Qi na"
+      src="/images/head.jpg">
+  <p class="site-author-name" itemprop="name">Qi na</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qi na</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v4.1.0
+  </div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v7.6.0
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
